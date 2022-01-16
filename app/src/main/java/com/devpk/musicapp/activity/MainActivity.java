@@ -32,22 +32,21 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ViewPagerAdapter viewPagerAdapter;
-    private ArrayList<MusicFiles> musicFilesArrayList;
+   public static ArrayList<MusicFiles> musicFilesArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         permission();
-        initView();
     }
 
     private void permission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } else {
+            initView();
             musicFilesArrayList = getAllAudio(getApplicationContext());
-            Toast.makeText(getApplicationContext(), "Permission Granted!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -56,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                initView();
                 musicFilesArrayList = getAllAudio(getApplicationContext());
-                Toast.makeText(getApplicationContext(), "Permission Granted!", Toast.LENGTH_SHORT).show();
             } else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
@@ -98,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 String duration = cursor.getString(4);
 
                 MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
+                Log.i("ndjask ","" + musicFiles);
                 tempAudioList.add(musicFiles);
             }
 
