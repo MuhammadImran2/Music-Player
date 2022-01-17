@@ -1,6 +1,7 @@
 package com.devpk.musicapp.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.devpk.musicapp.Model.MusicFiles;
 import com.devpk.musicapp.R;
+import com.devpk.musicapp.activity.PlayerActivity;
 
 import java.util.ArrayList;
 
@@ -49,6 +51,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
             Glide.with(context).load(android.R.drawable.stat_notify_error).into(holder.album_art);
         }
 
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, PlayerActivity.class);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @Override
