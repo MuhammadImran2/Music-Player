@@ -133,8 +133,7 @@
             android:id="@+id/play_pause"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_centerInParent="true"
             android:backgroundTint="@color/colorAccent"
             android:src="@drawable/play_arrow" />
 

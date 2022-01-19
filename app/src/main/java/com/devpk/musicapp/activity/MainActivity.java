@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager viewPager;
     private TabLayout tabLayout;
     private ViewPagerAdapter viewPagerAdapter;
-   public static ArrayList<MusicFiles> musicFilesArrayList;
+    public static ArrayList<MusicFiles> musicFilesArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +97,6 @@ public class MainActivity extends AppCompatActivity {
                 String duration = cursor.getString(4);
 
                 MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
-                Log.i("ndjask ","" + musicFiles);
                 tempAudioList.add(musicFiles);
             }
 
