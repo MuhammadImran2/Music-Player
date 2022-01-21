@@ -6,6 +6,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -17,6 +18,8 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -29,7 +32,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
 
     private TextView song_name, artist_name, duration_played, duration_total;
     private ImageView cover_art, nextBtn, prevBtn, backBtn, shuffleBtn, repeatBtn;
@@ -50,6 +53,7 @@ public class PlayerActivity extends AppCompatActivity {
         getIntentMethod();
         song_name.setText(listSongs.get(position).getTitle());
         artist_name.setText(listSongs.get(position).getArtist());
+        mediaPlayer.setOnCompletionListener(this);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -147,11 +151,8 @@ public class PlayerActivity extends AppCompatActivity {
         byte[] art = mediaMetadataRetriever.getEmbeddedPicture();
         Bitmap bitmap;
         if (art != null) {
-            Glide.with(this)
-                    .asBitmap()
-                    .load(art)
-                    .into(cover_art);
             bitmap = BitmapFactory.decodeByteArray(art, 0, art.length);
+            ImageAnimation(getApplicationContext(), cover_art, bitmap);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(@Nullable Palette palette) {
@@ -249,7 +250,8 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 }
             });
-            playPauseBtn.setImageResource(R.drawable.pause);
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.pause);
             mediaPlayer.start();
         } else {
             mediaPlayer.stop();
@@ -273,7 +275,8 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 }
             });
-            playPauseBtn.setImageResource(R.drawable.play_arrow);
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.play_arrow);
         }
 
     }
@@ -317,7 +320,8 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 }
             });
-            playPauseBtn.setImageResource(R.drawable.pause);
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.pause);
             mediaPlayer.start();
         } else {
             mediaPlayer.stop();
@@ -329,7 +333,6 @@ public class PlayerActivity extends AppCompatActivity {
             song_name.setText(listSongs.get(position).getTitle());
             artist_name.setText(listSongs.get(position).getArtist());
             seekBar.setMax(mediaPlayer.getDuration() / 1000);
-
             PlayerActivity.this.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -341,6 +344,7 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this, 1000);
                 }
             });
+            mediaPlayer.setOnCompletionListener(this);
             playPauseBtn.setImageResource(R.drawable.play_arrow);
         }
 
@@ -395,5 +399,83 @@ public class PlayerActivity extends AppCompatActivity {
                 }
             }); //End
         }
+    }
+
+    public void ImageAnimation(Context context, ImageView imageView, Bitmap bitmap) {
+        Animation animationOut = AnimationUtils.loadAnimation(context, android.R.anim.fade_out);
+        final Animation animationIn = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+
+        animationOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Glide.with(context).load(bitmap).into(imageView);
+                animationIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+
+
+                });
+                imageView.startAnimation(animationIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+
+        imageView.startAnimation(animationOut);
+    }
+
+    @Override
+    public void onCompletion(MediaPlayer mediaPlayer) {
+        if (mediaPlayer != null) {
+            myMethod();
+            mediaPlayer.setOnCompletionListener(this);
+        }
+    }
+
+    private void myMethod() {
+        mediaPlayer.stop();
+        mediaPlayer.release();
+        position = (position + 1) % listSongs.size();
+        uri = Uri.parse(listSongs.get(position).getPath());
+        mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
+        metaData(uri);
+        song_name.setText(listSongs.get(position).getTitle());
+        artist_name.setText(listSongs.get(position).getArtist());
+        seekBar.setMax(mediaPlayer.getDuration() / 1000);
+
+        PlayerActivity.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (mediaPlayer != null) {
+                    int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                    seekBar.setProgress(mCurrentPosition);
+                }
+
+                handler.postDelayed(this, 1000);
+            }
+        });
+        mediaPlayer.setOnCompletionListener(this);
+        playPauseBtn.setBackgroundResource(R.drawable.pause);
+        mediaPlayer.start();
     }
 }
