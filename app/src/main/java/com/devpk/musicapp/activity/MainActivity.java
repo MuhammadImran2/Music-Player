@@ -33,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
     private TabLayout tabLayout;
     private ViewPagerAdapter viewPagerAdapter;
     public static ArrayList<MusicFiles> musicFilesArrayList;
+    public static boolean shuffleBoolean = false, repeatBoolean = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,8 @@ public class MainActivity extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         } else {
-            initView();
             musicFilesArrayList = getAllAudio(getApplicationContext());
+            initView();
         }
     }
 
@@ -55,8 +57,8 @@ public class MainActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == 1) {
             if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                initView();
                 musicFilesArrayList = getAllAudio(getApplicationContext());
+                initView();
             } else {
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
             }
@@ -82,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
                 MediaStore.Audio.Media.ARTIST,
                 MediaStore.Audio.Media.ALBUM,
                 MediaStore.Audio.Media.DURATION,
+                MediaStore.Audio.Media._ID
         };
         Cursor cursor = context.getContentResolver().query(uri, projection,
                 null, null, null
@@ -95,8 +98,9 @@ public class MainActivity extends AppCompatActivity {
                 String artist = cursor.getString(2);
                 String album = cursor.getString(3);
                 String duration = cursor.getString(4);
+                String id = cursor.getString(5);
 
-                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration);
+                MusicFiles musicFiles = new MusicFiles(path, title, artist, album, duration, id);
                 tempAudioList.add(musicFiles);
             }
 

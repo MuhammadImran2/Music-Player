@@ -117,7 +117,7 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="32dp"
             android:src="@drawable/shuffle_off"
-            app:tint="@color/colorAccent" />
+            />
 
         <ImageView
             android:id="@+id/id_prev"
@@ -155,7 +155,7 @@
             android:layout_centerVertical="true"
             android:layout_marginEnd="32dp"
             android:src="@drawable/repeat_off"
-            app:tint="@color/colorAccent" />
+            />
 
     </RelativeLayout>
 
