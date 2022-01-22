@@ -1,4 +1,4 @@
-package com.devpk.musicapp.Model;
+package com.devpk.musicapp.model;
 
 public class MusicFiles {
 

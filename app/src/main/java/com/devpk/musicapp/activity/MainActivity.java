@@ -1,7 +1,6 @@
 package com.devpk.musicapp.activity;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -9,16 +8,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
-import android.widget.Toast;
 
-import com.devpk.musicapp.Model.MusicFiles;
+import com.devpk.musicapp.model.MusicFiles;
 import com.devpk.musicapp.R;
 import com.devpk.musicapp.adapter.ViewPagerAdapter;
 import com.devpk.musicapp.fragment.AlbumFragment;

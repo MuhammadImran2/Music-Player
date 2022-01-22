@@ -6,7 +6,6 @@ import static com.devpk.musicapp.activity.MainActivity.shuffleBoolean;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 import androidx.palette.graphics.Palette;
 
 import android.content.Context;
@@ -27,10 +26,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.devpk.musicapp.Model.MusicFiles;
+import com.devpk.musicapp.model.MusicFiles;
 import com.devpk.musicapp.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -61,6 +59,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         song_name.setText(listSongs.get(position).getTitle());
         artist_name.setText(listSongs.get(position).getArtist());
         mediaPlayer.setOnCompletionListener(this);
+
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -91,7 +90,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 handler.postDelayed(this, 1000);
             }
         });
-
 
         backBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,6 +123,8 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
                 }
             }
         });
+
+
     }
 
     private String formattedTime(int mCurrentPosition) {
@@ -145,7 +145,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
     private void getIntentMethod() {
         position = getIntent().getIntExtra("position", -1);
+
         listSongs = musicFilesArrayList;
+
         if (listSongs != null) {
             playPauseBtn.setImageResource(R.drawable.pause);
             uri = Uri.parse(listSongs.get(position).getPath());
@@ -155,14 +157,13 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
-            mediaPlayer.stop();
+            mediaPlayer.start();
         } else {
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
             mediaPlayer.start();
         }
 
         seekBar.setMax(mediaPlayer.getDuration() / 1000);
-
         metaData(uri);
     }
 
@@ -354,7 +355,6 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             } else if (!shuffleBoolean && !repeatBoolean){
                 position = (position + 1) % listSongs.size();
             }
-            //position = (position + 1) % listSongs.size();
             uri = Uri.parse(listSongs.get(position).getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
             metaData(uri);
