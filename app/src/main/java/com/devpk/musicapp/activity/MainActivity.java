@@ -1,5 +1,7 @@
 package com.devpk.musicapp.activity;
 
+import static com.devpk.musicapp.adapter.AlbumDetailAdapter.albumFiles;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -9,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
@@ -34,6 +37,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     private ViewPagerAdapter viewPagerAdapter;
     public static ArrayList<MusicFiles> musicFilesArrayList;
     public static boolean shuffleBoolean = false, repeatBoolean = false;
+    private String MY_SORT_PREF = "sortByOrder";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +79,26 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
     }
 
     public static ArrayList<MusicFiles> getAllAudio(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("sortByOrder", MODE_PRIVATE);
+        String sortByOrder = sharedPreferences.getString("sorting", "sortByName");
+        String order = null;
         ArrayList<MusicFiles> tempAudioList = new ArrayList<>();
         Uri uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
+
+        switch (sortByOrder) {
+            case "sortByName":
+                order = MediaStore.MediaColumns.DISPLAY_NAME + " ASC";
+                break;
+
+            case "sortByDate":
+                order = MediaStore.MediaColumns.DATE_ADDED + " ASC";
+                break;
+
+            case "sortBySize":
+                order = MediaStore.MediaColumns.SIZE + " DESC";
+                break;
+        }
+
         String[] projection = {
                 MediaStore.Audio.Media.DATA, //For Path
                 MediaStore.Audio.Media.TITLE,
@@ -86,8 +108,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 MediaStore.Audio.Media._ID
         };
         Cursor cursor = context.getContentResolver().query(uri, projection,
-                null, null, null
-        );
+                null, null, order);
 
         if (cursor != null) {
 
@@ -134,8 +155,37 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 myFile.add(song);
             }
         }
-        
+
         SongsFragment.adapter.updateSong(myFile);
         return true;
+    }
+
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        SharedPreferences.Editor editor = getSharedPreferences(MY_SORT_PREF, MODE_PRIVATE).edit();
+        switch (item.getItemId()) {
+
+            case R.id.by_Name:
+                editor.putString("sorting", "sortByName");
+                editor.apply();
+                this.recreate();
+                break;
+
+            case R.id.by_Date:
+                editor.putString("sorting", "sortByDate");
+                editor.apply();
+                this.recreate();
+                break;
+
+            case R.id.by_Size:
+                editor.putString("sorting", "sortBySize");
+                editor.apply();
+                this.recreate();
+                break;
+        }
+
+        return super.onOptionsItemSelected(item);
+
     }
 }

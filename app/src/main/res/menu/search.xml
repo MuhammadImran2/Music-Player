@@ -9,4 +9,31 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/sort_option"
+        android:title="Sort By"
+        app:showAsAction="never">
+
+        <menu>
+
+            <item
+                android:id="@+id/by_Name"
+                android:title="Name"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/by_Date"
+                android:title="Date"
+                app:showAsAction="never" />
+
+            <item
+                android:id="@+id/by_Size"
+                android:title="Size"
+                app:showAsAction="never" />
+
+
+        </menu>
+
+    </item>
+
 </menu>

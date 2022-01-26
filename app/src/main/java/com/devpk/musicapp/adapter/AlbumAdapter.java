@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.MyViewHolder> {
 
     private Context context;
-    private ArrayList<MusicFiles> albumFiles;
+    ArrayList<MusicFiles> albumFiles;
 
     public AlbumAdapter(Context context, ArrayList<MusicFiles> albumFiles) {
         this.context = context;
