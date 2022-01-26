@@ -31,7 +31,7 @@ import java.util.ArrayList;
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder> {
 
     private Context context;
-    private ArrayList<MusicFiles> musicFilesArrayList;
+    public static ArrayList<MusicFiles> musicFilesArrayList;
 
     public MusicAdapter(Context context, ArrayList<MusicFiles> musicFilesArrayList) {
         this.context = context;
@@ -46,7 +46,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder,  int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         MusicFiles musicFiles = musicFilesArrayList.get(position);
         holder.fileName.setText(musicFiles.getTitle());
 
@@ -132,5 +132,12 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
         byte[] art = mediaMetadataRetriever.getEmbeddedPicture();
         mediaMetadataRetriever.release();
         return art;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void updateSong(ArrayList<MusicFiles> musicFiles) {
+        musicFilesArrayList = new ArrayList<>();
+        musicFilesArrayList.addAll(musicFiles);
+        notifyDataSetChanged();
     }
 }

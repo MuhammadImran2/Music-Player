@@ -22,6 +22,7 @@
         <entry key="app/src/main/res/layout/fragment_songs.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/music_item.xml" value="0.25" />
         <entry key="app/src/main/res/menu/popup.xml" value="0.14453125" />
+        <entry key="app/src/main/res/menu/search.xml" value="0.14453125" />
       </map>
     </option>
   </component>

@@ -2,6 +2,7 @@ package com.devpk.musicapp.fragment;
 
 import static com.devpk.musicapp.activity.MainActivity.musicFilesArrayList;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -19,7 +20,8 @@ import com.devpk.musicapp.adapter.MusicAdapter;
 public class SongsFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    MusicAdapter adapter;
+    @SuppressLint("StaticFieldLeak")
+    public static MusicAdapter adapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
