@@ -49,6 +49,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyViewHolder
     public void onBindViewHolder(@NonNull MyViewHolder holder,  int position) {
         MusicFiles musicFiles = musicFilesArrayList.get(position);
         holder.fileName.setText(musicFiles.getTitle());
+
         byte[] image = getAlbumArt(musicFiles.getPath());
 
         if (image != null) {

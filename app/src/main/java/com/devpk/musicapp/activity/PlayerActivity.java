@@ -8,7 +8,10 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.palette.graphics.Palette;
 
+import android.content.ComponentName;
 import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -18,6 +21,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -26,16 +30,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.devpk.musicapp.listener.ActionPlaying;
 import com.devpk.musicapp.model.MusicFiles;
 import com.devpk.musicapp.R;
+import com.devpk.musicapp.service.MusicService;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
+public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener,
+        ActionPlaying, ServiceConnection {
 
     private TextView song_name, artist_name, duration_played, duration_total;
     private ImageView cover_art, nextBtn, prevBtn, backBtn, shuffleBtn, repeatBtn;
@@ -245,10 +253,19 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
     @Override
     protected void onResume() {
+        Intent intent = new Intent(this, MusicService.class);
+        bindService(intent, this, BIND_AUTO_CREATE);
         playThreadBtn();
         nextThreadBtn();
         prevThreadBtn();
         super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        unbindService(this);
+        super.onPause();
+
     }
 
     private void prevThreadBtn() {
@@ -267,13 +284,13 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         prevThread.start();
     }
 
-    private void prevBtnClicked() {
+    public void prevBtnClicked() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
             if (shuffleBoolean && !repeatBoolean) {
                 position = getRandom(listSongs.size() - 1);
-            } else if (!shuffleBoolean && !repeatBoolean){
+            } else if (!shuffleBoolean && !repeatBoolean) {
                 position = ((position - 1) < 0) ? (listSongs.size() - 1) : (position - 1);
             }
             uri = Uri.parse(listSongs.get(position).getPath());
@@ -302,7 +319,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mediaPlayer.release();
             if (shuffleBoolean && !repeatBoolean) {
                 position = getRandom(listSongs.size() - 1);
-            } else if (!shuffleBoolean && !repeatBoolean){
+            } else if (!shuffleBoolean && !repeatBoolean) {
                 position = ((position - 1) < 0) ? (listSongs.size() - 1) : (position - 1);
             }
             uri = Uri.parse(listSongs.get(position).getPath());
@@ -345,14 +362,14 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         nextThread.start();
     }
 
-    private void nextBtnClicked() {
+    public void nextBtnClicked() {
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.stop();
             mediaPlayer.release();
 
             if (shuffleBoolean && !repeatBoolean) {
                 position = getRandom(listSongs.size() - 1);
-            } else if (!shuffleBoolean && !repeatBoolean){
+            } else if (!shuffleBoolean && !repeatBoolean) {
                 position = (position + 1) % listSongs.size();
             }
             uri = Uri.parse(listSongs.get(position).getPath());
@@ -381,10 +398,9 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             mediaPlayer.release();
             if (shuffleBoolean && !repeatBoolean) {
                 position = getRandom(listSongs.size() - 1);
-            } else if (!shuffleBoolean && !repeatBoolean){
+            } else if (!shuffleBoolean && !repeatBoolean) {
                 position = (position + 1) % listSongs.size();
             }
-            //position = (position + 1) % listSongs.size();
             uri = Uri.parse(listSongs.get(position).getPath());
             mediaPlayer = MediaPlayer.create(getApplicationContext(), uri);
             metaData(uri);
@@ -430,7 +446,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         playThread.start();
     }
 
-    private void playPauseBtnClicked() {
+    public void playPauseBtnClicked() {
         if (mediaPlayer.isPlaying()) {
             playPauseBtn.setImageResource(R.drawable.play_arrow);
             mediaPlayer.pause();
@@ -515,13 +531,13 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         }
     }
 
-    private void myMethod() {
+    public void myMethod() {
         mediaPlayer.stop();
         mediaPlayer.release();
 
         if (shuffleBoolean && !repeatBoolean) {
             position = getRandom(listSongs.size() - 1);
-        } else if (!shuffleBoolean && !repeatBoolean){
+        } else if (!shuffleBoolean && !repeatBoolean) {
             position = (position + 1) % listSongs.size();
         }
         uri = Uri.parse(listSongs.get(position).getPath());
@@ -545,5 +561,18 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
         mediaPlayer.setOnCompletionListener(this);
         playPauseBtn.setBackgroundResource(R.drawable.pause);
         mediaPlayer.start();
+    }
+
+    MusicService musicService;
+
+    @Override
+    public void onServiceConnected(ComponentName componentName, IBinder service) {
+        MusicService.MyBinder myBinder = (MusicService.MyBinder) service;
+        musicService = myBinder.getService();
+    }
+
+    @Override
+    public void onServiceDisconnected(ComponentName componentName) {
+        musicService = null;
     }
 }

@@ -16,6 +16,7 @@
         <entry key="app/src/main/res/drawable/tab_indicator.xml" value="0.20885416666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.14" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.19270833333333334" />
+        <entry key="app/src/main/res/layout/album_item.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_album.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/fragment_songs.xml" value="0.19270833333333334" />
         <entry key="app/src/main/res/layout/music_item.xml" value="0.25" />

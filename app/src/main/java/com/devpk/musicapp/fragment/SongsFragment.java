@@ -21,11 +21,6 @@ public class SongsFragment extends Fragment {
     private RecyclerView recyclerView;
     MusicAdapter adapter;
 
-    public SongsFragment() {
-        // Required empty public constructor
-    }
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
