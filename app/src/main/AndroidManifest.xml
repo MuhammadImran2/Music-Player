@@ -14,16 +14,20 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.MusicApp">
+        android:theme="@style/Theme.MusicApp.DarkActionBar">
 
         <activity
             android:screenOrientation="portrait"
+            android:theme="@style/Theme.MusicApp.NoActionBar"
             android:name=".activity.AlbumDetailActivity"
             android:exported="true" />
+
         <activity
             android:name=".activity.PlayerActivity"
+            android:theme="@style/Theme.MusicApp.NoActionBar"
             android:exported="true"
             android:screenOrientation="portrait" />
+
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
