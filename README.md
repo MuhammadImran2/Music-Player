@@ -1,2 +1,2 @@
 # Music-Player
-This is simple android music player app with Service 
+Simple and Small android music player app for learning.
