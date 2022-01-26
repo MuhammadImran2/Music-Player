@@ -40,7 +40,6 @@ public class AlbumFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             recyclerView.setLayoutManager(new GridLayoutManager(getActivity(),2));
         }
-
         return view;
     }
 }

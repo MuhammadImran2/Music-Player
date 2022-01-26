@@ -31,7 +31,6 @@ public class MainActivity extends AppCompatActivity {
     public static ArrayList<MusicFiles> musicFilesArrayList;
     public static boolean shuffleBoolean = false, repeatBoolean = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

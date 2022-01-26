@@ -3,6 +3,7 @@ package com.devpk.musicapp.activity;
 import static com.devpk.musicapp.activity.MainActivity.musicFilesArrayList;
 import static com.devpk.musicapp.activity.MainActivity.repeatBoolean;
 import static com.devpk.musicapp.activity.MainActivity.shuffleBoolean;
+import static com.devpk.musicapp.adapter.AlbumDetailAdapter.albumFiles;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -153,8 +154,13 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
 
     private void getIntentMethod() {
         position = getIntent().getIntExtra("position", -1);
+        String sender = getIntent().getStringExtra("sender");
 
-        listSongs = musicFilesArrayList;
+        if (sender != null && sender.equals("albumDetails")) {
+            listSongs = albumFiles;
+        } else {
+            listSongs = musicFilesArrayList;
+        }
 
         if (listSongs != null) {
             playPauseBtn.setImageResource(R.drawable.pause);
